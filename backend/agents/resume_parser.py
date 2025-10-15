@@ -11,7 +11,8 @@ from typing import Dict, Any, List, Optional
 from pathlib import Path
 from datetime import datetime
 import json
-from base_agent import BaseAgent, AgentConfig
+import spacy
+from .base_agent import BaseAgent, AgentConfig
 
 class ResumeParserAgent(BaseAgent):
     """
@@ -33,6 +34,15 @@ class ResumeParserAgent(BaseAgent):
     def __init__(self, config: AgentConfig):
         super().__init__(config)
 
+        # Initialize spaCy NLP model
+        try:
+            self.nlp = spacy.load("en_core_web_sm")
+            self.nlp_enabled = True
+        except OSError:
+            self.logger.warning("spaCy en_core_web_sm model not found. Install with: python -m spacy download en_core_web_sm")
+            self.nlp = None
+            self.nlp_enabled = False
+
         # Text processing patterns
         self.email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
         self.phone_pattern = r'\b\d{3}[-.]?\d{3}[-.]?\d{4}\b|\(\d{3}\)\s*\d{3}[-.]?\d{4}'
@@ -43,13 +53,22 @@ class ResumeParserAgent(BaseAgent):
         self.mid_keywords = ['mid-level', 'intermediate', 'experienced']
         self.junior_keywords = ['junior', 'entry-level', 'fresher', 'graduate']
 
+        # Section headers for NLP-based section detection
+        self.section_patterns = {
+            'experience': ['experience', 'employment', 'work history', 'professional experience', 'work experience'],
+            'education': ['education', 'academic background', 'academic qualifications'],
+            'skills': ['skills', 'technical skills', 'competencies', 'expertise'],
+            'projects': ['projects', 'personal projects', 'professional projects'],
+            'certifications': ['certifications', 'certificates', 'credentials'],
+        }
+
         # Skill categorization
         self.skill_categories = {
-            'programming': ['python', 'java', 'javascript', 'c++', 'c#', 'go', 'rust', 'typescript'],
-            'web_dev': ['react', 'angular', 'vue', 'node', 'django', 'flask', 'express'],
-            'databases': ['postgresql', 'mysql', 'mongodb', 'redis', 'elasticsearch'],
-            'cloud': ['aws', 'azure', 'gcp', 'docker', 'kubernetes', 'terraform'],
-            'data_science': ['pandas', 'numpy', 'tensorflow', 'pyspark', 'jupyter', 'scikit-learn']
+            'programming': ['python', 'java', 'javascript', 'c++', 'c#', 'go', 'rust', 'typescript', 'php'],
+            'web_dev': ['react', 'angular', 'vue', 'node', 'django', 'flask', 'express', 'html', 'css'],
+            'databases': ['postgresql', 'mysql', 'mongodb', 'redis', 'elasticsearch', 'sql', 'oracle'],
+            'cloud': ['aws', 'azure', 'gcp', 'docker', 'kubernetes', 'terraform', 'heroku'],
+            'data_science': ['pandas', 'numpy', 'tensorflow', 'pyspark', 'jupyter', 'scikit-learn', 'ml', 'ai']
         }
 
     def validate_input(self, **kwargs) -> bool:
@@ -90,7 +109,7 @@ class ResumeParserAgent(BaseAgent):
                 # TODO: Implement URL downloading
                 raw_text = "Downloaded content from URL"
             else:
-                raw_text = content
+                raw_text = content or ""
 
             # Parse into structured data
             parsed_data = self._parse_resume_text(raw_text)
@@ -108,8 +127,7 @@ class ResumeParserAgent(BaseAgent):
         if file_path_lower.endswith('.pdf'):
             return self._extract_pdf_text(file_path)
         elif file_path_lower.endswith(('.docx', '.doc')):
-            # TODO: Implement DOCX parsing with python-docx
-            return "DOCX content extraction not yet implemented"
+            return self._extract_docx_text(file_path)
         elif file_path_lower.endswith('.txt'):
             with open(file_path, 'r', encoding='utf-8') as f:
                 return f.read()
@@ -124,6 +142,20 @@ class ResumeParserAgent(BaseAgent):
                 text += page.get_text()
 
         return text
+
+    def _extract_docx_text(self, file_path: str) -> str:
+        """Extract text from DOCX files using python-docx."""
+        try:
+            from docx import Document
+            doc = Document(file_path)
+            text = ""
+            for paragraph in doc.paragraphs:
+                text += paragraph.text + "\n"
+            return text
+        except ImportError:
+            raise ImportError("python-docx not installed. Install with: pip install python-docx")
+        except Exception as e:
+            raise ValueError(f"Error parsing DOCX file {file_path}: {str(e)}")
 
     def _parse_resume_text(self, text: str) -> Dict[str, Any]:
         """Parse raw resume text into structured JSON."""

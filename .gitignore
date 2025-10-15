@@ -122,6 +122,48 @@ dist
 tmp/
 temp/
 
+# Environment files (secure)
+.ENV
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Testing
+backend/.pytest_cache/
+backend/coverage/
+backend/.coverage
+backend/htmlcov/
+.coverage
+coverage.xml
+backend/pytest.ini
+
+# IDE and editor files (additional patterns)
+.vscode/settings.json
+.idea/workspace.xml
+*.swp
+*.swo
+*~
+
 # Project-specific
 .clinerules/
 BuildProcess.md
@@ -129,3 +171,37 @@ PRD.md
 tests/temp/
 tests/fixtures/
 .qodo/
+
+# Frontend specific (when added)
+frontend/node_modules/
+frontend/.next/
+frontend/build/
+frontend/dist/
+frontend/.env.local
+frontend/.env.production
+
+# Development artifacts
+*.swp
+*.swo
+*~
+****.orig
+****.backup
+
+# IDE workspace files
+.vscode/settings.json
+.vscode/launch.json
+.idea/workspace.xml
+.idea/tasks.xml
+
+# Database and cache files
+*.sqlite3
+*.sqlite
+*.db-journal
+.cache/
+.venv/lib/python3.10/site-packages/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Documentation builds (if applicable)
+docs/build/
+docs/source/_build/

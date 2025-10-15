@@ -9,6 +9,8 @@ import uvicorn
 from pydantic import BaseModel
 import os
 from dotenv import load_dotenv
+from agents import AgentOrchestrator
+from base_agent import AgentConfig, ResumeParserAgent
 
 # Load environment variables
 load_dotenv()
@@ -157,19 +159,39 @@ async def batch_process():
             detail=f"Batch processing failed: {str(e)}"
         )
 
+# Global agent instances
+resume_parser_agent = None
+
 @app.on_event("startup")
 async def startup_event():
     """Initialize resources on startup."""
+    global resume_parser_agent
     print("🚀 Starting MisterHR Backend...")
     print("🔗 Agent orchestration system initializing...")
-    # TODO: Initialize LangChain agents here
+
+    try:
+        # Initialize ResumeParserAgent
+        agent_config = AgentConfig(
+            name="ResumeParserAgent",
+            model="gpt-4-turbo-preview",
+            temperature=0.3,  # Lower temperature for parsing accuracy
+            max_tokens=2048,
+            timeout=30
+        )
+        resume_parser_agent = ResumeParserAgent(agent_config)
+        print("✅ ResumeParserAgent initialized successfully")
+    except Exception as e:
+        print(f"❌ Failed to initialize ResumeParserAgent: {str(e)}")
+
     print("✅ Backend ready for requests")
 
 @app.on_event("shutdown")
 async def shutdown_event():
     """Clean up resources on shutdown."""
+    global resume_parser_agent
     print("🛑 Shutting down MisterHR Backend...")
     # TODO: Clean up agent resources here
+    resume_parser_agent = None
     print("✅ Backend shutdown complete")
 
 if __name__ == "__main__":

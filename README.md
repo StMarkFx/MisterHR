@@ -126,7 +126,7 @@
    python main.py
    ```
    Server will start at: http://127.0.0.1:8000
-
+ 
 3. **Frontend Setup** (Parallel Terminal)
    ```bash
    cd frontend
