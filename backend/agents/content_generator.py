@@ -288,6 +288,13 @@ EDUCATION
         # Relevance score determines enthusiasm level
         relevance_score = self._calculate_relevance_score(resume_data, job_data)
 
+        achievements = resume_data.get('experience', [{}])[0].get('achievements', ['delivered multiple projects'])[:2]
+        responsibilities = job_data.get('responsibilities', ['technical excellence'])[:2]
+        tech_skills = resume_data.get('skills', {}).get('technical', [])[:3]
+
+        # Fix backslash issue in f-string
+        company_interest = 'your mission' if company_name else "the team's success"
+
         cover_letter = f"""[Your Name]
 [Your Address]
 [City, State ZIP Code]
@@ -304,9 +311,9 @@ Dear Hiring Manager,
 
 I am excited to apply for the {job_title} position at {company_name}, as advertised. With my background in {', '.join(key_skills)}, I am confident I can make significant contributions to your team's objectives.
 
-In my current role as {resume_data.get('personal_info', {}).get('title', 'Software Developer')}, I have successfully {' and '.join(resume_data.get('experience', [{}])[0].get('achievements', ['delivered multiple projects'])[:2])}. This experience directly aligns with {company_name}'s needs for {' and '.join(job_data.get('responsibilities', ['technical excellence'])[:2] [:2])}.
+In my current role as {resume_data.get('personal_info', {}).get('title', 'Software Developer')}, I have successfully {' and '.join(achievements)}. This experience directly aligns with {company_name}'s needs for {' and '.join(responsibilities)}.
 
-What particularly draws me to {company_name} is {'your innovative approach to technology' if relevance_score > 70 else 'the opportunity to work on challenging projects'}. I am eager to bring my expertise in {', '.join(resume_data.get('skills', {}).get('technical', [])[:3])} to contribute to {'your mission' if company_name else 'the team\'s success'}.
+What particularly draws me to {company_name} is {'your innovative approach to technology' if relevance_score > 70 else 'the opportunity to work on challenging projects'}. I am eager to bring my expertise in {', '.join(tech_skills)} to contribute to {company_interest}.
 
 I would welcome the opportunity to discuss how my background and skills can benefit {company_name}. Thank you for considering my application. I look forward to the possibility of contributing to your team.
 
@@ -504,6 +511,27 @@ Sincerely,
 
         return min(100.0, score)
 
+
+
+    def _assess_ats_compatibility(self, results: Dict[str, Any]) -> float:
+        """Assess how ATS-friendly the content is."""
+        ats_score = 100.0  # Start with perfect score
+
+        # Check for confusing formatting (simplified assessment)
+        for content_type, text in results.get('content', {}).items():
+            # Penalize unusual characters
+            unusual_chars_list = ['•', '★', '☆', '▲', '■', '○', '●', '◆', '◇', '◊', '□', '■']
+            unusual_count = sum(1 for char in unusual_chars_list if char in text)
+            ats_score -= unusual_count * 2
+
+            # Check for standard sections
+            standard_sections = ['experience', 'education', 'skills', 'summary']
+            has_standard_sections = any(section in text.lower() for section in standard_sections)
+            if not has_standard_sections:
+                ats_score -= 20
+
+        return max(0, ats_score)
+
     def _evaluate_content_quality(self, results: Dict[str, Any]) -> Dict[str, Any]:
         """Evaluate the quality of generated content."""
         content = results.get('content', {})
@@ -559,24 +587,6 @@ Sincerely,
 
         return densities
 
-    def _assess_ats_compatibility(self, results: Dict[str, Any]) -> float:
-        """Assess how ATS-friendly the content is."""
-        ats_score = 100.0  # Start with perfect score
-
-        # Check for confusing formatting (simplified assessment)
-        for content_type, text in results.get('content', {}).items():
-            # Penalize unusual characters
-            unusual_chars = '•★☆▲■○●◆◇◊□■'
-            unusual_count = sum(1 for char in unusual_chars if char in text)
-            ats_score -= unusual_count * 2
-
-            # Check for standard sections
-            has_standard_sections = any(section in text.lower() for section in
-                                      ['experience', 'education', 'skills', 'summary'])
-            if not has_standard_sections:
-                ats_score -= 20
-
-        return max(0, ats_score)
 
     # Formatting helper methods
     def _format_experience(self, experiences: List[Dict[str, Any]]) -> str:

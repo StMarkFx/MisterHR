@@ -16,7 +16,7 @@ from .resume_parser import ResumeParserAgent, AgentConfig
 from .jd_analyzer import JDAnalyzerAgent
 from .web_enrichment import WebEnrichmentAgent
 from .matching_agent import MatchingAgent
-from .content_generator import ContentGeneratorAgent
+# from .content_generator import ContentGeneratorAgent  # Temporarily disabled
 
 class AgentOrchestrator:
     """
@@ -94,11 +94,12 @@ class AgentOrchestrator:
             self.agents['jd_analyzer'] = JDAnalyzerAgent(self.agent_configs['jd_analyzer'])
             self.agents['web_enrichment'] = WebEnrichmentAgent(self.agent_configs['web_enrichment'])
             self.agents['matching'] = MatchingAgent(self.agent_configs['matching'])
-            self.agents['content_generator'] = ContentGeneratorAgent(self.agent_configs['content_generator'])
+            # self.agents['content_generator'] = ContentGeneratorAgent(self.agent_configs['content_generator'])  # Temporarily disabled
             self.logger.info("All agents initialized successfully")
         except Exception as e:
             self.logger.error(f"Failed to initialize agents: {str(e)}")
-            raise
+            # Don't raise exception for now - allow partial initialization for basic functionality
+            self.logger.warning("Continuing with partial agent initialization")
 
     async def execute_workflow(self, workflow_name: str, **kwargs) -> Dict[str, Any]:
         """

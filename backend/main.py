@@ -10,7 +10,8 @@ from pydantic import BaseModel
 import os
 from dotenv import load_dotenv
 from agents import AgentOrchestrator
-from base_agent import AgentConfig, ResumeParserAgent
+from agents.base_agent import AgentConfig
+from agents.resume_parser import ResumeParserAgent
 
 # Load environment variables
 load_dotenv()
@@ -41,8 +42,7 @@ class HealthResponse(BaseModel):
 
 class ResumeParseRequest(BaseModel):
     """Resume parsing request model."""
-    file_url: str
-    content_type: str  # "pdf" | "docx" | "text"
+    file_path: str  # Path to resume file
 
 class ResumeParseResponse(BaseModel):
     """Resume parsing response model."""
@@ -60,77 +60,30 @@ async def health_check():
         version="1.0.0"
     )
 
-# Resume parsing endpoint (placeholder for now)
+# Resume parsing endpoint - Real agent integration
 @app.post("/api/parse-resume", response_model=ResumeParseResponse)
 async def parse_resume(request: ResumeParseRequest):
-    """Parse resume from multiple formats using ResumeParserAgent."""
+    """Parse resume from file using ResumeParserAgent."""
     try:
-        # TODO: Implement ResumeParserAgent integration
-        # For now, return mock response with enhanced data structure
+        global resume_parser_agent
+
+        if not resume_parser_agent:
+            return ResumeParseResponse(
+                success=False,
+                error="Resume parser agent not initialized"
+            )
+
+        # Use real ResumeParserAgent
+        result = await resume_parser_agent.execute(file_path=request.file_path)
         return ResumeParseResponse(
             success=True,
-            data={
-                "personal_info": {
-                    "name": "Mock User",
-                    "email": "mock@example.com",
-                    "phone": "+1-555-0123",
-                    "title": "Senior Software Engineer",
-                    "location": "San Francisco, CA"
-                },
-                "experience": [
-                    {
-                        "title": "Senior Software Engineer",
-                        "company": "Tech Corp",
-                        "duration": "2021-2023",
-                        "years": 2,
-                        "achievements": ["Led team of 5 developers", "Reduced deployment time by 60%"],
-                        "technologies": ["Python", "React", "Docker"]
-                    }
-                ],
-                "education": [
-                    {
-                        "degree": "Master of Computer Science",
-                        "institution": "Stanford University",
-                        "year": 2020,
-                        "grade": "3.8 GPA"
-                    }
-                ],
-                "skills": {
-                    "technical": ["Python", "React", "Node.js", "PostgreSQL"],
-                    "soft": ["Leadership", "Communication", "Problem Solving"],
-                    "proficiency_levels": {
-                        "Python": "expert",
-                        "React": "advanced",
-                        "PostgreSQL": "intermediate"
-                    }
-                },
-                "projects": [
-                    {
-                        "name": "Cloud Migration Initiative",
-                        "description": "Led migration from on-premises to cloud infrastructure",
-                        "technologies": ["AWS", "Terraform", "Docker"],
-                        "impact": "60% cost reduction, improved scalability"
-                    }
-                ],
-                "certifications": [
-                    {
-                        "name": "AWS Certified Solutions Architect",
-                        "issuer": "Amazon Web Services",
-                        "year": 2022
-                    }
-                ],
-                "online_presence": {
-                    "github": "https://github.com/mockuser",
-                    "linkedin": "https://linkedin.com/in/mockuser",
-                    "portfolio": "https://mockportfolio.dev",
-                    "verified": False
-                }
-            }
+            data=result
         )
+
     except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Resume parsing failed: {str(e)}"
+        return ResumeParseResponse(
+            success=False,
+            error=f"Resume parsing failed: {str(e)}"
         )
 
 # Generate tailored resume endpoint (placeholder for now)
@@ -146,18 +99,68 @@ async def generate_resume():
             detail=f"Resume generation failed: {str(e)}"
         )
 
-# AI agent orchestration endpoint (placeholder for now)
-@app.post("/api/batch-process")
-async def batch_process():
-    """Process multiple resumes using BatchProcessingAgent."""
+# Agent Orchestrator workflow test endpoint
+@app.post("/api/test-orchestrator")
+async def test_orchestrator(file_path: str):
+    """Test basic resume parsing workflow (simplified for now)."""
     try:
-        # TODO: Implement BatchProcessingAgent integration
-        return {"success": True, "message": "Batch processing initiated"}
+        # For now, just test the individual ResumeParserAgent
+        if not resume_parser_agent:
+            return {"success": False, "error": "Resume parser not available"}
+
+        result = await resume_parser_agent.execute(file_path=file_path)
+        return {"success": True, "result": {
+            "resume_data": result,
+            "workflow_notes": "Simplified workflow - individual agent only"
+        }}
     except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Batch processing failed: {str(e)}"
-        )
+        return {"success": False, "error": str(e)}
+
+# Test Matching Agent endpoint
+@app.post("/api/match-resume")
+async def match_resume(resume_path: str, job_description: str):
+    """Test job-resume matching with MatchingAgent."""
+    try:
+        # First parse the resume
+        if not resume_parser_agent:
+            return {"success": False, "error": "Resume parser not available"}
+
+        resume_result = await resume_parser_agent.execute(file_path=resume_path)
+        if not resume_result:
+            return {"success": False, "error": "Resume parsing failed"}
+
+        # For now, just return a basic match result (MatchingAgent integration next)
+        # JD Analyzer not fully integrated yet, so simulate job data
+        job_data = {
+            "required_skills": ["python", "javascript", "react"],
+            "preferred_skills": [" AWS", "docker"],
+            "experience_level": "mid",
+            "years_experience_min": 3,
+            "responsibilities": ["develop software", "work in teams"]
+        }
+
+        # Simulate basic matching (would use real MatchingAgent)
+        resume_skills = set(resume_result.get('skills', {}).get('technical', []))
+        job_skills = set(job_data['required_skills'])
+        skill_match = len(resume_skills.intersection(job_skills)) / len(job_skills) * 100
+
+        return {
+            "success": True,
+            "resume_data": resume_result,
+            "job_data": job_data,
+            "matching_result": {
+                "overall_score": round(skill_match, 2),
+                "component_scores": {
+                    "skills_match": round(skill_match, 2),
+                    "experience_match": 50.0,  # Placeholder
+                    "education_match": 75.0,   # Placeholder
+                },
+                "match_category": "good_match" if skill_match > 50 else "moderate_match",
+                "analysis_notes": "Basic skill-based matching (MatchingAgent integration coming)"
+            }
+        }
+    except Exception as e:
+        return {"success": False, "error": str(e)}
 
 # Global agent instances
 resume_parser_agent = None

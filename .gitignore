@@ -205,3 +205,7 @@ pip-delete-this-directory.txt
 # Documentation builds (if applicable)
 docs/build/
 docs/source/_build/
+
+
+# CV for testing
+StMark_Adebayo_CV.pdf
