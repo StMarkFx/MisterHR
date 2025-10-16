@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-009688.svg)](https://fastapi.tiangolo.com/)
-[![Next.js 14](https://img.shields.io/badge/Next.js-14.0-000000.svg)](https://nextjs.org/)
+[![Next.js 15](https://img.shields.io/badge/Next.js-15.0-000000.svg)](https://nextjs.org/)
 [![LangChain](https://img.shields.io/badge/LangChain-0.1.0-1a73e8.svg)](https://langchain.com/)
 [![Supabase](https://img.shields.io/badge/Supabase-2.0.3-3ecf8e.svg)](https://supabase.com/)
 
@@ -68,12 +68,12 @@
 | Agent | Purpose | Implementation | Status |
 |-------|---------|----------------|--------|
 | **ResumeParserAgent** | Parse CV data into 8 categories | Rule-based NLP | ✅ Complete |
-| **WebEnrichmentAgent** | Verify GitHub, LinkedIn, portfolio | External APIs | 🔄 In Progress |
-| **JDAnalyzerAgent** | Extract job requirements | LLM + NLP | ⏳ Planned |
-| **MatchingAgent** | Calculate candidate-job fit | Semantic similarity | ⏳ Planned |
-| **ContentGeneratorAgent** | Tailored resume/cover letter | LLM writing | ⏳ Planned |
+| **WebEnrichmentAgent** | Verify GitHub, LinkedIn, portfolio | External APIs | ✅ Complete |
+| **JDAnalyzerAgent** | Extract job requirements | LLM + NLP | ✅ Complete |
+| **MatchingAgent** | Calculate candidate-job fit | Semantic similarity | ✅ Complete |
+| **ContentGeneratorAgent** | Tailored resume/cover letter | LLM writing | ✅ Complete |
+| **AgentOrchestrator** | Orchestrate multi-agent workflows | Async coordination | 🔄 In Progress |
 | **FeedbackAgent** | Optimization suggestions | LLM analysis | ⏳ Planned |
-| **VerificationAgent** | Skills validation & cross-check | Rule + API | ⏳ Planned |
 | **BatchProcessingAgent** | Multi-resume orchestration | Async coordination | ⏳ Planned |
 
 ### **Technology Stack**
@@ -255,9 +255,9 @@ We welcome contributions! Please read our [Contributing Guidelines](CONTRIBUTING
 
 ### **Current Progress**
 - ✅ **Phase 1**: Foundation Setup - 100% Complete
-- 🔄 **Phase 2**: Core AI Development - 25% Complete
-- ⏳ **Phase 3**: Applicant Features - Not Started
-- ⏳ **Phase 4**: Recruiter Features - Not Started
+- 🔄 **Phase 2**: Core AI Development - 100% Complete
+- 🔄 **Phase 3**: Frontend Setup - Started (Next.js + shadcn/ui)
+- ⏳ **Phase 4**: UI Development - Not Started
 - ⏳ **Phase 5**: Testing & Deployment - Not Started
 
 ### **Milestones**

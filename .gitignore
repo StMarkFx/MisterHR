@@ -34,6 +34,12 @@ yarn-error.log*
 # Next.js
 .next/
 out/
+build/
+dist/
+
+# React/Vite
+build/
+dist/
 
 # Production
 /build
@@ -163,6 +169,8 @@ backend/pytest.ini
 *.swp
 *.swo
 *~
+****.orig
+****.backup
 
 # Project-specific
 .clinerules/
@@ -206,6 +214,9 @@ pip-delete-this-directory.txt
 docs/build/
 docs/source/_build/
 
+# shadcn/ui component cache
+components.json
+shadcn.json
 
 # CV for testing
 StMark_Adebayo_CV.pdf
