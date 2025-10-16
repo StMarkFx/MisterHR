@@ -1,11 +1,11 @@
-# 🚀 **MisterHR** - AI-Powered Hiring Platform
+# 🤖 **MisterHR** - Multi-Agent AI Hiring Platform
 
-*Two-sided AI assistant that transforms resume optimization and candidate screening*
+*AI-powered agentic assistant serving job candidates and recruiters with intelligent hiring automation*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-009688.svg)](https://fastapi.tiangolo.com/)
-[![Next.js 15](https://img.shields.io/badge/Next.js-15.0-000000.svg)](https://nextjs.org/)
+[![Next.js 15](https://img.shields.io/badge/Next.js-15.5.5-000000.svg)](https://nextjs.org/)
 [![LangChain](https://img.shields.io/badge/LangChain-0.1.0-1a73e8.svg)](https://langchain.com/)
 [![Supabase](https://img.shields.io/badge/Supabase-2.0.3-3ecf8e.svg)](https://supabase.com/)
 
@@ -21,6 +21,25 @@
 
 ---
 
+## 📖 **What's New**
+
+### **🐍 Python Backend Agent Architecture**
+- **ResumeParserAgent** - Advanced NLP extraction from PDF/DOCX files
+- **JDAnalyzerAgent** - Job description intelligence with LLM enhancement
+- **MatchingAgent** - Semantic similarity scoring and candidate ranking
+- **ContentGeneratorAgent** - AI-powered resume tailoring and cover letters
+- **WebEnrichmentAgent** - GitHub/LinkedIn/portfolio verification
+- **AgentOrchestrator** - Async workflow coordination for complex operations
+- **BaseAgent** - Abstract foundation with metrics, health monitoring, and type safety
+
+### **⚛️ Modern Frontend Stack**
+- **Next.js 15.5.5** with App Router and Turbopack
+- **TypeScript** with strict typing and Zod validation
+- **Tailwind CSS** with custom theme and shadcn/ui components
+- **React Hook Form** for efficient form handling
+
+---
+
 ## ✨ **Features**
 
 ### 🧑‍💼 **For Job Applicants**
@@ -31,21 +50,21 @@
 - **📈 Application Tracking** - History and performance analytics
 
 ### 👔 **For Recruiters**
-- **🎯 Job Requirements Analysis** - AI extraction of key skills and criteria
+- **� Job Requirements Analysis** - AI extraction of key skills and criteria
 - **⚡ Batch Resume Processing** - 50+ resume screening simultaneously
 - **📋 Intelligent Candidate Ranking** - Multi-factor fit scoring and summarization
 - **🕒 Time Savings** - Reduce screening time by 70%
 - **📊 Analytics Dashboard** - Hiring pipeline and candidate insights
 
 ### 🤖 **AI Agent Architecture**
-- **8 Specialized Agents** - Multi-agent LangChain orchestration
+- **6 Specialized Agents** - Multi-agent LangChain orchestration
 - **Rule-Based + LLM Enhancement** - Immediate functionality with AI upgrades
 - **Real-Time Processing** - Async operations for scalability
 - **Error Resilience** - Graceful degradation and retry logic
 
 ---
 
-## 🏗️ **Architecture**
+## �🏗️ **Architecture**
 
 ### **System Overview**
 ```
@@ -72,22 +91,20 @@
 | **JDAnalyzerAgent** | Extract job requirements | LLM + NLP | ✅ Complete |
 | **MatchingAgent** | Calculate candidate-job fit | Semantic similarity | ✅ Complete |
 | **ContentGeneratorAgent** | Tailored resume/cover letter | LLM writing | ✅ Complete |
-| **AgentOrchestrator** | Orchestrate multi-agent workflows | Async coordination | 🔄 In Progress |
-| **FeedbackAgent** | Optimization suggestions | LLM analysis | ⏳ Planned |
-| **BatchProcessingAgent** | Multi-resume orchestration | Async coordination | ⏳ Planned |
+| **AgentOrchestrator** | Orchestrate multi-agent workflows | Async coordination | ✅ Complete |
 
 ### **Technology Stack**
 
 | Component | Technology | Version | Purpose |
 |-----------|------------|---------|---------|
-| **Frontend** | Next.js + React + TypeScript | 14+ | Modern web application |
+| **Frontend** | Next.js + React + TypeScript | 15.5.5 | Modern web application |
 | **Backend** | FastAPI + Python | 3.10+ | High-performance API |
-| **Database** | Supabase + PostgreSQL | - | Secure data management |
 | **AI Framework** | LangChain | 0.1.0 | Multi-agent orchestration |
+| **Database** | Supabase + PostgreSQL | 2.0.3 | Secure data management |
 | **LLM Service** | OpenAI GPT-4 | - | Advanced AI capabilities |
 | **File Processing** | PyMuPDF + spaCy | - | Document parsing |
-| **Deployment** | Vercel + Railway | - | Scalable hosting |
-| **Authentication** | Supabase Auth | - | Secure user management |
+| **UI Components** | shadcn/ui + Tailwind | - | Component library |
+| **Form Handling** | React Hook Form + Zod | - | Client-side validation |
 
 ---
 
@@ -126,7 +143,7 @@
    python main.py
    ```
    Server will start at: http://127.0.0.1:8000
- 
+
 3. **Frontend Setup** (Parallel Terminal)
    ```bash
    cd frontend
@@ -186,6 +203,29 @@ Located in `diagrams/` directory:
 - [Build Process](BuildProcess.md) - Detailed development timeline
 - [Product Requirements](PRD.md) - MVP specifications
 - [Contributing Guidelines](CONTRIBUTING.md) - Development workflow
+
+### **Project Structure**
+```
+misterhr/
+├── backend/                 # FastAPI application
+│   ├── main.py             # API server entry point
+│   ├── agents/             # AI agents directory
+│   │   ├── base_agent.py   # Abstract agent base class
+│   │   ├── agent_orchestrator.py  # Workflow coordination
+│   │   ├── resume_parser.py       # CV parsing agent
+│   │   ├── jd_analyzer.py         # Job description agent
+│   │   ├── matching_agent.py      # Candidate matching
+│   │   ├── content_generator.py   # Content creation
+│   │   └── web_enrichment.py      # Portfolio verification
+├── frontend/               # Next.js application
+│   ├── src/
+│   │   ├── app/            # Next.js App Router
+│   │   ├── components/     # Reusable React components
+│   │   └── lib/            # Utilities and types
+├── tests/                  # Test suite
+├── diagrams/               # Architecture documentation
+└── shared/                 # Shared utilities
+```
 
 ---
 
@@ -255,46 +295,47 @@ We welcome contributions! Please read our [Contributing Guidelines](CONTRIBUTING
 
 ### **Current Progress**
 - ✅ **Phase 1**: Foundation Setup - 100% Complete
-- 🔄 **Phase 2**: Core AI Development - 100% Complete
-- 🔄 **Phase 3**: Frontend Setup - Started (Next.js + shadcn/ui)
+- ✅ **Phase 2**: Core AI Development - 100% Complete
+- 🔄 **Phase 3**: Frontend Setup - 90% Complete
 - ⏳ **Phase 4**: UI Development - Not Started
 - ⏳ **Phase 5**: Testing & Deployment - Not Started
 
-### **Milestones**
-- **Week 1**: Project setup and foundation ✅
-- **Week 2**: AI agents and resume parsing (Current)
-- **Week 3**: Basic AI integration and testing
-- **Week 4**: Applicant UI and user experience
-- **Week 5**: Recruiter features and batch processing
-- **Week 6**: Full system integration
-- **Week 7**: Quality assurance and optimization
-- **Week 8**: Production deployment and launch
+### **Milestones Achieved**
+- ✅ Agent architecture with 6 specialized AI agents
+- ✅ Resume parsing with spaCy NLP and LLM enhancement
+- ✅ Job description intelligence and requirements extraction
+- ✅ Semantic matching with multi-factor candidate ranking
+- ✅ Content generation for tailored resumes and cover letters
+- ✅ Web enrichment for portfolio verification
+- ✅ Agent orchestration for complex workflows
+- ✅ Next.js frontend with TypeScript and shadcn/ui components
 
 ---
 
 ## 🎯 **Roadmap**
 
-### **Immediate (Q4 2024)**
+### **Immediate (Q4 2024)** ✅ Complete
 - ✅ Resume parsing and analysis
-- 🔄 Multi-format CV processing
-- ⏳ Online portfolio verification
-- ⏳ Basic candidate-job matching
+- ✅ Multi-format CV processing
+- ✅ Online portfolio verification
+- ✅ Basic candidate-job matching
+- ✅ AI-powered content generation
 
 ### **Short Term (Q1 2025)**
-- AI-powered resume tailoring
-- Recruiter batch processing
+- Frontend UI development and user experience
+- Recruiter batch processing interface
 - Real-time feedback dashboard
-- Job description intelligence
+- Enhanced job description intelligence
 
 ### **Medium Term (Q2 2025)**
-- Advanced LLM integration
+- Advanced LLM integration and fine-tuning
 - Multi-language support
 - Job board integrations
-- Advanced analytics
+- Advanced analytics and reporting
 
 ### **Long Term (2025+)**
-- AI chat assistants
-- Collaborative recruitment
+- AI chat assistants for interviews
+- Collaborative recruitment features
 - Predictive hiring analytics
 - Mobile application
 
@@ -332,6 +373,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Supabase** for secure database and authentication
 - **OpenAI** for advanced AI capabilities
 - **Next.js** community for modern React framework
+- **shadcn/ui** for beautiful component primitives
 
 ---
 
@@ -342,8 +384,15 @@ Want to see MisterHR in action? Check out our interactive demo:
 ```bash
 # Parse a sample resume
 curl -X POST "http://127.0.0.1:8000/api/parse-resume" \
-  -H "Content-Type: application/json" \
+  -H "Content-Type": application/json" \
   -d '{"content": "John Smith, Senior Developer at Tech Corp..."}'
+```
+
+```bash
+# Match candidate to job description
+curl -X POST "http://127.0.0.1:8000/api/match-candidate" \
+  -H "Content-Type": application/json" \
+  -d '{"resume_data": {...}, "job_data": {...}}'
 ```
 
 **Built with ❤️ using cutting-edge AI to revolutionize hiring** ✨
